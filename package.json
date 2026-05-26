@@ -1,7 +1,7 @@
-﻿{
+{
   "name": "notebook-ai-proxy",
   "version": "1.0.0",
-  "description": "AI备忘录 - 后端AI代理服务（保护API Key，安全调用豆包API）",
+  "description": "AI备忘录 - 后端AI代理服务(保护API Key,安全调用豆包API)",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
