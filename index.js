@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const cors = require("cors");
 
 const app = express();
@@ -10,7 +10,7 @@ const CONFIG = {
     "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
   arkApiKey: process.env.ARK_API_KEY || "",
   authToken: process.env.AUTH_TOKEN || "your-secret-auth-token-here",
-  defaultModel: process.env.DEFAULT_MODEL || "doubao-1.5-32k",
+  defaultModel: process.env.DEFAULT_MODEL || "doubao-1-5-pro-32k-250115",
   maxTokens: parseInt(process.env.MAX_TOKENS) || 2048,
 };
 
@@ -33,9 +33,9 @@ app.get("/", (req, res) => {
 app.get("/api/models", (req, res) => {
   res.json({
     models: [
-      { id: "doubao-1.5-32k", name: "豆包 1.5 标准版" },
-      { id: "doubao-1.5-128k", name: "豆包 1.5 长上下文" },
-      { id: "doubao-1.5-lite-32k", name: "豆包 1.5 Lite" },
+      { id: "doubao-1-5-pro-32k-250115", name: "豆包 1.5 Pro 32K" },
+      { id: "doubao-1-5-pro-128k-250115", name: "豆包 1.5 Pro 128K" },
+      { id: "doubao-lite-32k-250115", name: "豆包 Lite 32K" },
       { id: "deepseek-v3-241226", name: "DeepSeek V3" },
       { id: "deepseek-r1-250120", name: "DeepSeek R1" },
     ],
@@ -46,11 +46,16 @@ app.get("/api/models", (req, res) => {
 app.post("/api/chat", async (req, res) => {
   try {
     const auth = req.headers.authorization;
+    console.log("[DEBUG] Received Authorization: " + (auth ? auth.substring(0, 30) + "..." : "EMPTY"));
+    console.log("[DEBUG] Expected: Bearer " + CONFIG.authToken);
+    console.log("[DEBUG] AUTH_TOKEN env set: " + (process.env.AUTH_TOKEN ? "YES" : "NO (using default)"));
     if (!auth || auth !== "Bearer " + CONFIG.authToken) {
+      console.log("[DEBUG] Auth mismatch! auth=" + auth + " expected=Bearer " + CONFIG.authToken);
       return res.status(401).json({
         error: "身份验证失败",
         message: "Auth Token 无效，请联系管理员",
         code: "AUTH_FAILED",
+        debug: { received: auth ? auth.substring(0, 40) : null, expected: "Bearer " + CONFIG.authToken }
       });
     }
 
